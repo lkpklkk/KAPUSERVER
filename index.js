@@ -1,34 +1,26 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import json from 'body-parser';
+import dotenv from 'dotenv';
 import User from './Models/User.js';
 import morgan from 'morgan';
-
+import { connectDb } from './config/db.js';
+import specs from './config/swagger.js';
+import swaggerUi from 'swagger-ui-express';
+import userRouter from './routes/user.js';
 const app = express();
 
+dotenv.config();
+app.use(express.json());
 app.use(morgan('dev'));
+
 // Connect to MongoDB
-mongoose
-  .connect('mongodb://localhost:27017/skiCarpoolDB', {})
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.log('Error connecting to MongoDB', err);
-  });
+connectDb();
 
-// Sample route to create a user
-app.post('/users', async (req, res) => {
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).send(user);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+// auto Create api docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-const PORT = 3000;
+app.use('/user', userRouter);
+
+const PORT = process.env.NODE_LOCAL_PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

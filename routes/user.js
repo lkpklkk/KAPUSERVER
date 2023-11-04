@@ -59,7 +59,8 @@ userRouter.post('/signup', async (req, res) => {
 
 userRouter.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = email.toLowerCase();
 
     // Check if user exists
     let user = await User.findOne({ email });
@@ -99,7 +100,12 @@ userRouter.post('/login', async (req, res) => {
 userRouter.get('/me', auth, populateUser, async (req, res) => {
   try {
     // Get user from database
-    const user = req.userDetails;
+    const user = await req.userDetails.populate([
+      'cars',
+      'trip_posted',
+      'trip_joined',
+    ]);
+
     res.json(user);
   } catch (error) {
     console.error(error.message);

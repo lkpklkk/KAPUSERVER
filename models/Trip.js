@@ -11,21 +11,15 @@ const TripSchema = new Schema({
     enum: ['open', 'closed', 'cancelled', 'ongoing'],
   },
 
-  // Using Date for general indexing
-  date: { type: String, required: true },
-
   // Using Date for consistent datetime format
-  arrival_time_from: { type: Date, required: true },
-  arrival_time_to: { type: Date, required: true },
-  leave_time_from: { type: Date, required: true },
-  leave_time_to: { type: Date, required: true },
+  arrival_time: { type: Date, required: true },
+  leave_time: { type: Date, required: true },
 
   // Number of Available seats on this trip
-  seats_availale: { type: Number, required: true },
+  seats_available: { type: Number, min: 1, required: true },
 
   pickup_preference: {
-    allow_pickup: { type: Boolean, required: true },
-
+    allow_pickup: { type: Boolean, required: false, default: false },
     // Maximum distance from the route to pickup a passenger
     distance: {
       type: Number,
@@ -63,15 +57,11 @@ const TripSchema = new Schema({
   ],
 
   // Total price for the trip
-  total_price: {
-    amount: { type: Number, min: 0, required: true }, // Ensuring non-negative value
-    currency: { type: String, required: true },
-  },
-
+  currency: { type: String, required: true },
   description: { type: String, required: false },
 });
 
 // Add appropriate indexes based on your query patterns
-TripSchema.index({ driver: 1, resort: 1, date: 1 });
+TripSchema.index({ driver: 1, resort: 1 });
 
 export default mongoose.model('Trip', TripSchema);

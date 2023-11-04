@@ -9,9 +9,9 @@ const UserSchema = new Schema({
   phone_verified: { type: Boolean, default: false },
   email_verified: { type: Boolean, default: false },
   password: { type: String, required: true },
-  car: { type: Schema.Types.ObjectId, ref: 'Car', required: false },
-  trip_posted: [{ type: Schema.Types.ObjectId, ref: 'Trips' }],
-  trip_joined: [{ type: Schema.Types.ObjectId, ref: 'Trips' }],
+  cars: [{ type: Schema.Types.ObjectId, ref: 'Car' }],
+  trip_posted: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
+  trip_joined: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 UserSchema.index({ email: 1 }, { unique: true });

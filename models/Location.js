@@ -13,6 +13,10 @@ const locationSchema = new Schema({
       required: true,
     },
   },
-});
 
+  // url for the icon
+  icon: String,
+});
+locationSchema.index({ geometry: '2dsphere', name: 1 }, { unique: true });
 const Location = mongoose.model('Location', locationSchema);
+export default Location;
